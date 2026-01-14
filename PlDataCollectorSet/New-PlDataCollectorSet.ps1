@@ -20,6 +20,9 @@
             New-PlDataCollectorSet : creates DCS on the local computer using the first template found in the script's startup folder (24hRot-3LastSegments.xml coming with script in original release folder)
             New-PlDataCollectorSet -DCSName "Perf_3Days_15Sec" -MaxFolderCount 3 -SampleInterval 15 -xmlTemplateName MyTemplate.xml -StartDataCollector
             New-PlDataCollectorSet -ComputerName "srv1.contoso.com","srv2.contoso.com" -Credential (Get-Credential)  -DCSName "Perf_3Days_15Sec" -MaxFolderCount 3 -SampleInterval 15 -xmlTemplateName  MyTemplate.xml -StartDataCollector
+
+         .REMARKS
+            If New Data Collector not starts at scheduled time it must be tuned according https://learn.microsoft.com/en-us/troubleshoot/windows-server/performance/user-defined-dcs-doesnt-run-as-scheduled
     #>
 
     [CmdletBinding()]
@@ -49,7 +52,9 @@
                 $RootPathNode.'#text' = $RootPathNode.'#text'.Substring(0,$RootPathNode.'#text'.LastIndexOf("\") + 1) + $DataCollectorName
             } else {$DataCollectorName = $xml.SelectSingleNode("//Name").'#text'}
 
-            $xml.SelectNodes("//*[starts-with(local-name(),'Description')]") | % {$_.'#text' = "This set was created by $env:USERNAME@$env:USERDOMAIN at $((Get-Date).ToString("yyyy.MM.dd-HH:mm:ss"))"}
+            $Description = "Created by $env:USERNAME@$env:USERDOMAIN at $((Get-Date).ToString("yyyy.MM.dd-HH:mm:ss"))"
+            $xml.SelectSingleNode("//Description").'#text' = $Description
+            $xml.SelectSingleNode("//DescriptionUnresolved").'#text' = $Description
             
             if ($Sample -ne "") { $xml.SelectSingleNode("//SampleInterval").'#text' = [string]$Sample }
 
