@@ -29,16 +29,16 @@ $AllShadowVolumes | % {
     If ($CopiesLong.Count -ge $MaxCopiesLongCount) {
         0..$($CopiesLong.Count - $MaxCopiesLongCount) | % {
             Write-Host "Deleting LONG Snapshot with ID $($CopiesLong[$_].ID) and timestamp $($CopiesLong[$_].InstallDate)on on Volume $VolumeLabel" -ForegroundColor Cyan
-            vssadmin Delete Shadows /Shadow=$($CopiesLong[$_].ID) /Quiet
+            #vssadmin Delete Shadows /Shadow=$($CopiesLong[$_].ID) /Quiet
         }
     } else {Write-Host "No LONG Shadow Copies for deleteion on Volume $VolumeLabel"}
     If ($CopiesShort.Count -ge $MaxCopiesShortCount) {
         0..$($CopiesShort.Count - $MaxCopiesShortCount) | % {
             Write-Host "Deleting SHORT Snapshot with ID $($CopiesShort[$_].ID) and timestamp $($CopiesShort[$_].InstallDate)on Volume $VolumeLabel" -ForegroundColor Cyan
-            vssadmin Delete Shadows /Shadow=$($CopiesShort[$_].ID) /Quiet
+            #vssadmin Delete Shadows /Shadow=$($CopiesShort[$_].ID) /Quiet
         }
     } else {Write-Host "No SHORT Shadow Copies for deleteion on Volume $VolumeLabel"}
-    Write-Host "Starting devnodeclean"
-    & cmd /c "$Execdir\devnodeclean\x64\DevNodeClean.exe"
 }
+Write-Host "Starting devnodeclean" -ForegroundColor Yellow
+& cmd /c "$Execdir\devnodeclean\x64\DevNodeClean.exe"
 Stop-Transcript
