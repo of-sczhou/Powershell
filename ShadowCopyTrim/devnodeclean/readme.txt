@@ -1,0 +1,1 @@
+https://learn.microsoft.com/en-us/troubleshoot/windows-server/backup-and-storage/event-id-32-shadow-copies-are-unexpectedly-deleted
